@@ -15,6 +15,11 @@ export class DishService {
 
   constructor() { }
 
+
+  getDishIds(): Observable<string[] | any> {
+    return of(DISHES.map(dish => dish.id ));
+  }
+
   public getDishes(): Observable< Dish[]> {
     // return Promise.resolve(DISHES);
 
