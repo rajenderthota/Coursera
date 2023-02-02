@@ -6,18 +6,22 @@ import { of,firstValueFrom } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 
-
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { baseURL } from '../shared/baseurl';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DishService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
 
   getDishIds(): Observable<string[] | any> {
-    return of(DISHES.map(dish => dish.id ));
+    // return of(DISHES.map(dish => dish.id ));
+    // return this.http.get<Dish[]>(baseURL + 'dishes');
+    return this.getDishes().pipe(map(dishes => dishes.map(dish => dish.id)));
   }
 
   public getDishes(): Observable< Dish[]> {
@@ -29,7 +33,8 @@ export class DishService {
     // });
 
     // return firstValueFrom(of(DISHES).pipe(delay(2000)));
-    return of(DISHES).pipe(delay(2000));
+    // return of(DISHES).pipe(delay(2000));
+    return this.http.get<Dish[]>(baseURL + 'dishes');
   }
 
 
@@ -43,7 +48,8 @@ export class DishService {
 
     // return firstValueFrom(of(DISHES.filter((dish) => (dish.id === id))[0]).pipe(delay(2000)));
 
-    return of(DISHES.filter((dish) => (dish.id === id))[0]).pipe(delay(2000));
+    // return of(DISHES.filter((dish) => (dish.id === id))[0]).pipe(delay(2000));
+    return this.http.get<Dish>(baseURL + 'dishes/' + id);
 
   }
 
@@ -57,7 +63,9 @@ export class DishService {
 
     // return firstValueFrom(of(DISHES.filter((dish) => dish.featured)[0]).pipe(delay(2000)));
 
-    return of(DISHES.filter((dish) => dish.featured)[0]).pipe(delay(2000));
+    // return of(DISHES.filter((dish) => dish.featured)[0]).pipe(delay(2000));
+
+    return this.http.get<Dish[]>(baseURL + 'dishes?featured=true').pipe(map(dishes => dishes[0]));
   }
 
 
